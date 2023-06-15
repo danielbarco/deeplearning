@@ -32,7 +32,8 @@ def accuracy(Z, T):
     # So only if we use sigmoid activation function for binary or softmax for multi-class
     # after the last layer, we need to use 0.5 as threshold
     # in this case we tanh as activation function, so we don't need to use 0.5 as threshold
-    return torch.mean(((Z>=0).float() == T).float())
+    Y = (Z >= 0).float()
+    return torch.mean((Y == T).float())
 
   else:
     # categorical classification
@@ -76,6 +77,19 @@ def Network(D, K, O):
     torch.nn.Tanh(),
     torch.nn.Linear(K, O),
     
+  )
+ 
+ # Fully connected network
+def fully_connected(D, K, O):
+  return torch.nn.Sequential(
+    # no parameters are required in flatten
+    torch.nn.Flatten(),
+    torch.nn.Linear(in_features= D, out_features=K),
+    torch.nn.Tanh(),
+    torch.nn.Linear(in_features= K, out_features=K),
+    torch.nn.Tanh(),
+    torch.nn.Linear(in_features= K, out_features=O),
+
   )
  
 # Convolutional network
@@ -150,7 +164,7 @@ class RBFActivation(torch.nn.Module):
 
 # Train convolutional & linear
 
-def train(network, epochs, eta, momentum):
+def train(network, epochs = 1000, eta = 0.01, momentum = 0.9):
   # select loss function and optimizer
   loss = torch.nn.CrossEntropyLoss()
   optimizer = torch.optim.SGD(
@@ -168,7 +182,7 @@ def train(network, epochs, eta, momentum):
 
   for epoch in tqdm(range(epochs)):
     # train network on training data
-    for x,t in trainloader:
+    for x,t in train_loader:
       # put data to device
       x, t = x.to(device), t.to(device)
       # train
@@ -187,7 +201,7 @@ def train(network, epochs, eta, momentum):
     
     with torch.no_grad():
       batch_val_loss, batch_val_acc = [], []
-      for x,t in testloader:
+      for x,t in test_loader:
         # put data to device
         x, t = x.to(device), t.to(device)
         # compute validation loss

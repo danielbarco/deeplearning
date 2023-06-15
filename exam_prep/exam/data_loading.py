@@ -71,15 +71,15 @@ def split_training_data(X,T,train_percentage=0.8):
 
 transform = torchvision.transforms.ToTensor()
 trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-validationset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
 
 
 B = 128 # batch size
 # training set and data loader
-train_loader = torch.utils.data.DataLoader(dataset = trainset, batch_size=B)
+trainloader = torch.utils.data.DataLoader(dataset = trainset, batch_size=B)
 
 # validation set and data loader
-validation_loader = torch.utils.data.DataLoader(dataset = validationset, batch_size=B)
+testloader = torch.utils.data.DataLoader(dataset = testset, batch_size=B)
 
 
 #########################
