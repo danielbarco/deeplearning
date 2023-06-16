@@ -24,9 +24,9 @@ def train(network, epochs = 1000, eta = 0.01, momentum = 0.9):
   # collect loss values and accuracies over the training epochs
   val_loss, val_acc = [], []
 
-  for epoch in tqdm(range(epochs)):
+  for epoch in range(epochs):
     # train network on training data
-    for x,t in train_loader:
+    for x,t in trainloader:
       # put data to device
       x, t = x.to(device), t.to(device)
       # train
@@ -45,7 +45,7 @@ def train(network, epochs = 1000, eta = 0.01, momentum = 0.9):
     
     with torch.no_grad():
       batch_val_loss, batch_val_acc = [], []
-      for x,t in test_loader:
+      for x,t in testloader:
         # put data to device
         x, t = x.to(device), t.to(device)
         # compute validation loss
@@ -77,7 +77,7 @@ def train(X_train, T_train, X_val, T_val, network, loss_function, epochs=1000, l
   # collect loss and accuracy values
   train_loss, train_acc, val_loss, val_acc = [], [], [], []
 
-  for epoch in tqdm(range(epochs)):
+  for epoch in range(epochs):
     optimizer.zero_grad()
 
     # train on training set
